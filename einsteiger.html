@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Einarbeitung Einsteiger · Anästhesiepflege · Heliosklinik Kiel</title>
+<style>
+  :root {
+    --teal:#005A6E; --teal-med:#0E7490; --teal-light:#CFFAFE; --teal-bg:#F0FDFF;
+    --red:#C0392B; --red-bg:#FDEDEC;
+    --amber:#B45309; --amber-bg:#FFFBEB;
+    --green:#15803D; --green-bg:#F0FDF4;
+    --blue:#1D4ED8; --blue-bg:#EFF6FF;
+    --purple:#6D28D9; --purple-bg:#F5F3FF;
+    --grey:#374151; --grey-bg:#F9FAFB;
+    --border:#E5E7EB; --white:#FFFFFF;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:#F3F4F6; color:var(--grey); min-height:100vh; }
+  #header { background:var(--teal); color:white; padding:0 16px; height:56px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:0 2px 8px rgba(0,0,0,0.2); }
+  #header-left { display:flex; align-items:center; gap:10px; }
+  #header-title { font-size:14px; font-weight:700; line-height:1; }
+  #header-sub { font-size:10px; opacity:0.8; margin-top:2px; }
+  #header-right { display:flex; align-items:center; gap:8px; }
+  #check-badge { font-size:11px; background:rgba(255,255,255,0.2); border-radius:12px; padding:3px 10px; }
+  #menu-btn { background:rgba(255,255,255,0.2); border:none; color:white; border-radius:6px; padding:6px 12px; cursor:pointer; font-size:18px; line-height:1; }
+  #progress-bar { height:3px; background:rgba(255,255,255,0.2); }
+  #progress-fill { height:100%; background:#67E8F9; transition:width 0.4s ease; }
+  #overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:200; }
+  #overlay.open { display:block; }
+  #drawer { position:fixed; top:0; left:0; bottom:0; width:270px; background:white; z-index:300; transform:translateX(-100%); transition:transform 0.25s ease; overflow-y:auto; }
+  #drawer.open { transform:translateX(0); }
+  #drawer-header { background:var(--teal); color:white; padding:16px; font-weight:700; font-size:14px; }
+  .drawer-item { display:flex; align-items:center; gap:10px; padding:11px 16px; cursor:pointer; border-left:3px solid transparent; border-bottom:1px solid var(--border); background:none; width:100%; text-align:left; transition:all 0.15s; }
+  .drawer-item:hover { background:var(--teal-bg); }
+  .drawer-item.active { background:var(--teal-light); border-left-color:var(--teal); }
+  .di-icon { font-size:18px; }
+  .di-title { font-size:13px; font-weight:600; color:var(--grey); }
+  .drawer-item.active .di-title { color:var(--teal); }
+  .di-sub { font-size:10px; color:#9CA3AF; margin-top:1px; }
+  #main { padding:12px; max-width:700px; margin:0 auto; }
+  .ch-header { border-radius:12px; padding:16px 18px; margin-bottom:14px; display:flex; align-items:center; gap:12px; color:white; }
+  .ch-header .ch-icon { font-size:28px; }
+  .ch-header .ch-title { font-size:18px; font-weight:700; }
+  .ch-header .ch-sub { font-size:12px; opacity:0.85; margin-top:2px; }
+  #pills { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
+  .pill { border-radius:20px; padding:5px 11px; font-size:11px; cursor:pointer; border:1px solid var(--border); background:white; color:var(--grey); transition:all 0.15s; white-space:nowrap; }
+  .pill.active { color:white; font-weight:700; }
+  #content-card { background:white; border-radius:12px; padding:16px; border:1px solid var(--border); box-shadow:0 1px 4px rgba(0,0,0,0.06); margin-bottom:14px; }
+  .sec-heading { font-size:15px; font-weight:700; color:var(--teal); border-bottom:2px solid var(--teal-light); padding-bottom:6px; margin:20px 0 10px; }
+  .sec-heading:first-child { margin-top:0; }
+  .cave { background:var(--red-bg); border:1px solid #FECACA; border-left:4px solid var(--red); border-radius:0 8px 8px 0; padding:11px 14px; margin:10px 0; font-size:13px; line-height:1.55; color:#7F1D1D; }
+  .cave strong { color:var(--red); }
+  .highlight { background:var(--blue-bg); border:1px solid #BFDBFE; border-left:4px solid var(--blue); border-radius:0 8px 8px 0; padding:11px 14px; margin:10px 0; font-size:13px; line-height:1.55; color:#1E3A8A; }
+  .highlight strong { font-weight:700; display:block; margin-bottom:4px; }
+  .infobox { background:var(--teal-bg); border:1px solid #A5F3FC; border-radius:8px; padding:12px 14px; margin:10px 0; }
+  .infobox-title { color:var(--teal); font-weight:700; font-size:13px; margin-bottom:7px; }
+  .infobox ul { padding-left:18px; }
+  .infobox li { color:#164E63; font-size:13px; line-height:1.65; margin-bottom:2px; }
+  .amberbox { background:var(--amber-bg); border:1px solid #FDE68A; border-left:4px solid var(--amber); border-radius:0 8px 8px 0; padding:11px 14px; margin:10px 0; font-size:13px; line-height:1.55; color:#78350F; }
+  .amberbox strong { color:var(--amber); font-weight:700; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin:10px 0; }
+  .card { background:white; border:1px solid var(--border); border-radius:8px; padding:12px 13px; border-top-width:3px; }
+  .card .c-icon { font-size:20px; margin-bottom:6px; }
+  .card .c-title { font-size:13px; font-weight:700; margin-bottom:4px; }
+  .card .c-text { font-size:12px; color:#4B5563; line-height:1.5; }
+  .tbl-wrap { overflow-x:auto; margin:10px 0; border-radius:8px; border:1px solid var(--border); }
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  thead th { background:var(--teal); color:white; padding:8px 10px; text-align:left; font-weight:700; white-space:nowrap; }
+  tbody tr:nth-child(even) { background:var(--grey-bg); }
+  tbody td { padding:7px 10px; border-bottom:1px solid var(--border); vertical-align:top; line-height:1.4; }
+  .phone-badge { display:inline-block; background:var(--teal); color:white; border-radius:4px; padding:2px 8px; font-weight:700; font-size:13px; font-family:monospace; }
+  .content-list { padding-left:20px; margin:8px 0; }
+  .content-list li { font-size:13px; line-height:1.7; margin-bottom:2px; }
+  .content-text { font-size:13px; line-height:1.65; color:var(--grey); margin:10px 0; }
+  .cl-group { border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden; transition:border-color 0.3s; }
+  .cl-group.done { border-color:#86EFAC; }
+  .cl-group-header { background:var(--grey-bg); padding:10px 14px; display:flex; justify-content:space-between; align-items:center; }
+  .cl-group.done .cl-group-header { background:var(--green-bg); }
+  .cl-group-title { font-weight:700; font-size:13px; }
+  .cl-group.done .cl-group-title { color:var(--green); }
+  .cl-progress { font-size:11px; font-weight:600; background:white; border:1px solid var(--border); border-radius:12px; padding:2px 8px; }
+  .cl-group.done .cl-progress { background:#DCFCE7; color:var(--green); border-color:#86EFAC; }
+  .cl-items { padding:6px 14px; }
+  .cl-item { display:flex; align-items:flex-start; gap:10px; padding:8px 4px; cursor:pointer; border-bottom:1px solid var(--border); user-select:none; -webkit-tap-highlight-color:transparent; }
+  .cl-item:last-child { border-bottom:none; }
+  .cl-box { width:20px; height:20px; border-radius:4px; border:2px solid #D1D5DB; background:white; flex-shrink:0; margin-top:1px; display:flex; align-items:center; justify-content:center; transition:all 0.2s; font-size:12px; font-weight:900; color:white; }
+  .cl-item.checked .cl-box { background:var(--green); border-color:var(--green); }
+  .cl-label { font-size:13px; line-height:1.5; transition:all 0.2s; }
+  .cl-item.checked .cl-label { color:#9CA3AF; text-decoration:line-through; }
+  .sign-block { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:18px; padding:14px; background:var(--grey-bg); border-radius:10px; border:1px solid var(--border); }
+  .sign-role { font-size:12px; color:#6B7280; margin-bottom:8px; font-weight:600; }
+  .sign-line { border-bottom:1px solid #9CA3AF; height:28px; margin-bottom:5px; }
+  .sign-hint { font-size:10px; color:#9CA3AF; }
+  #nav-footer { display:flex; gap:8px; margin-bottom:20px; }
+  .nav-btn { flex:1; padding:11px 14px; border-radius:8px; border:1px solid var(--border); background:white; cursor:pointer; font-size:12px; color:var(--grey); font-weight:600; transition:all 0.15s; text-align:center; }
+  .nav-btn.next { border-color:var(--teal); background:var(--teal); color:white; }
+  .nav-btn:active { opacity:0.8; }
+</style>
+</head>
+<body>
+<div id="header">
+  <div id="header-left">
+    <span style="font-size:20px">🏥</span>
+    <div>
+      <div id="header-title">Heliosklinik Kiel</div>
+      <div id="header-sub">Einarbeitung · Anästhesiepflege (Einsteiger)</div>
+    </div>
+  </div>
+  <div id="header-right">
+    <div id="check-badge">✅ <span id="check-count">0</span>/<span id="check-total">0</span></div>
+    <button id="menu-btn" onclick="toggleDrawer()">☰</button>
+  </div>
+</div>
+<div id="progress-bar"><div id="progress-fill" style="width:0%"></div></div>
+<div id="overlay" onclick="closeDrawer()"></div>
+<div id="drawer"><div id="drawer-header">📚 Kapitelübersicht</div><div id="drawer-items"></div></div>
+<div id="main">
+  <div class="ch-header" id="ch-header"><span class="ch-icon" id="ch-icon"></span><div><div class="ch-title" id="ch-title"></div><div class="ch-sub" id="ch-sub"></div></div></div>
+  <div id="pills"></div>
+  <div id="content-card"></div>
+  <div id="nav-footer"></div>
+</div>
+
+<script>
+const chapters = [
+  {id:"willkommen", icon:"👋", title:"Willkommen",         sub:"Dein Start bei uns",              color:"#005A6E"},
+  {id:"grundlagen", icon:"📚", title:"Was ist Anästhesie?",sub:"Verfahren im Überblick",           color:"#0369A1"},
+  {id:"monitoring", icon:"📡", title:"Monitoring",          sub:"Überwachung verstehen",           color:"#15803D"},
+  {id:"atemwege",   icon:"🫁", title:"Atemwege",            sub:"Masken, LMA, Tubus",              color:"#0369A1"},
+  {id:"medikamente",icon:"💊", title:"Medikamente",         sub:"Was wir täglich brauchen",        color:"#6D28D9"},
+  {id:"struktur",   icon:"🏥", title:"Unser Haus",          sub:"OP-Einheiten & Räume",            color:"#005A6E"},
+  {id:"morgen",     icon:"☀️", title:"Tagesablauf",         sub:"Vom Morgen bis Dienstende",       color:"#B45309"},
+  {id:"regional",   icon:"💉", title:"Regionalanästhesie",  sub:"Blockaden & deine Assistenz",     color:"#0E7490"},
+  {id:"spinal",     icon:"🦴", title:"Spinalanästhesie",    sub:"Rückenmarknarkose verstehen",     color:"#0F766E"},
+  {id:"zvk",        icon:"🩺", title:"ZVK",                 sub:"Zentralvenöser Katheter",         color:"#6D28D9"},
+  {id:"lagerung",   icon:"🛏️", title:"Lagerung",            sub:"Positionen & Blutsperre",         color:"#0369A1"},
+  {id:"awr",        icon:"🛌", title:"Aufwachraum",         sub:"Postoperative Betreuung",         color:"#1D4ED8"},
+  {id:"notfall",    icon:"🚨", title:"Notfall & Reanimation",sub:"Was tun wenn's ernst wird",      color:"#C0392B"},
+  {id:"telefon",    icon:"📞", title:"Telefonnummern",      sub:"Alle Durchwahlnummern",           color:"#374151"},
+  {id:"checkliste", icon:"✅", title:"Lerncheckliste",      sub:"Dein Fortschritt",                color:"#15803D"},
+];
+
+const content = {
+  willkommen:[
+    {t:"text", text:"Herzlich willkommen in der Anästhesiepflege der Heliosklinik Kiel! Dieses Lernheft begleitet dich durch deine Einarbeitung – von den allgemeinen Grundlagen der Anästhesie bis zu den ganz konkreten Abläufen in unserem Haus."},
+    {t:"highlight", title:"So nutzt du diese App", text:"Geh die Kapitel der Reihe nach durch. Jedes Kapitel erklärt zuerst das Grundprinzip, dann wie wir es hier konkret umsetzen. Am Ende findest du eine Lerncheckliste, mit der du deinen Fortschritt dokumentieren kannst."},
+    {t:"sec", text:"Unser Haus – auf einen Blick"},
+    {t:"cards", items:[
+      {icon:"🏥", color:"#005A6E", title:"Was wir sind", text:"Beleghaus mit 2 Stationen (Station 2 + 3). Unsere Ärzte sind niedergelassene Belegärzte – keine angestellten Klinikärzte."},
+      {icon:"🔬", color:"#0369A1", title:"Wo wir arbeiten", text:"Erdgeschoss: Großraum-OP mit 4 Sälen. 1. Obergeschoss: Urologisches Röntgen + kleiner Eingriffsraum."},
+      {icon:"🛌", color:"#15803D", title:"Unser AWR", text:"Aufwachraum mit ambulantem Sektor (4 Betten) und stationärem Sektor (5–6 Plätze)."},
+    ]},
+    {t:"amberbox", title:"Das macht uns besonders: ", text:"Bei uns ist gegenseitige Hilfe in der Einleitung kein Eingriff in fremde Aufgaben – sondern ausdrücklich erwünscht! Kolleginnen beim Vorbereiten oder bei der Ausleitung helfen ist hier Teamkultur."},
+  ],
+
+  grundlagen:[
+    {t:"text", text:"Anästhesie bedeutet die gezielte, reversible Ausschaltung von Schmerz, Bewusstsein und/oder Reflexen, um Operationen zu ermöglichen. Es gibt zwei große Gruppen von Verfahren."},
+    {t:"sec", text:"Die zwei Hauptgruppen"},
+    {t:"cards", items:[
+      {icon:"😴", color:"#0369A1", title:"Allgemeinanästhesie (Vollnarkose)", text:"Vollständige Ausschaltung von Bewusstsein, Schmerzempfinden und Schutzreflexen. Der Patient schläft und atmet kontrolliert. Erfordert Atemwegssicherung."},
+      {icon:"🦵", color:"#0E7490", title:"Regionalanästhesie (Teilnarkose)", text:"Nur eine Körperregion wird betäubt – der Patient bleibt wach oder leicht sediert. Geringere Belastung für den Organismus."},
+    ]},
+    {t:"sec", text:"Allgemeinanästhesie – die vier Säulen"},
+    {t:"table", headers:["Komponente","Ziel","Was wir nehmen"], rows:[
+      ["Hypnotikum (Schlafmittel)","Bewusstlosigkeit einleiten","Propofol"],
+      ["Inhalationsanästhetikum","Schlaf aufrechterhalten","Sevofluran"],
+      ["Opiat (Analgetikum)","Schmerzen ausschalten","Fentanyl / Sufentanil / Alfentanil"],
+      ["Muskelrelaxans (optional)","Muskelerschlaffung","Atracurium"],
+    ]},
+    {t:"highlight", title:"Kombinierte Anästhesie – bei uns häufig", text:"Vollnarkose + Regionalblock zusammen. Typisch bei uns: Knie-OP (Vollnarkose + Femoralis/Ischiadicus-Block) und Schulter-OP (Vollnarkose + Interskalenusblock). Der Block macht die Operation weniger schmerzhaft und reduziert den Opiatbedarf."},
+    {t:"sec", text:"Regionalverfahren: Welche machen wir?"},
+    {t:"table", headers:["Verfahren","Wann","Lokalanästhetikum"], rows:[
+      ["Femoralis-Block","Knie-OP","Ropivacain 0,25 %"],
+      ["Distaler Ischiadicus-Block","Knie-OP","Ropivacain 0,25 %"],
+      ["Interskalenusblock","Schulter-OP","Ropivacain 0,25 %"],
+      ["Fußblock","Fuß-OP","Ropivacain 0,25 % + 0,5 %"],
+      ["Axillärer Block","Arm-OP","Ropivacain 0,25 %"],
+    ]},
+    {t:"cave", text:"Bei uns gibt es Ropivacain nur in 0,5 %! Für 0,25 % immer 1:1 mit NaCl verdünnen. Und immer die gelb markierten Spezialspritzen verwenden – keine normalen Luer-Spritzen für Regionalanästhesie!"},
+  ],
+
+  monitoring:[
+    {t:"text", text:"Monitoring bedeutet: wir beobachten kontinuierlich die Vitalfunktionen des Patienten. Ziel ist es, Probleme früh zu erkennen, bevor sie gefährlich werden. In unserem Haus arbeiten wir ausschließlich mit nichtinvasivem Monitoring – keine Arterie, kein ZVK."},
+    {t:"sec", text:"Das Basismonitoring – was wird gemessen?"},
+    {t:"table", headers:["Parameter","Wie gemessen","Normalwert","Was es zeigt"], rows:[
+      ["SpO₂","Pulsoximeter, Fingerclip","95–99 %","Sauerstoffsättigung im Blut"],
+      ["EKG","Klebeelektroden, 3 oder 5 Ableitungen","Sinusrhythmus, HF 50–100","Herzrhythmus, Herzfrequenz"],
+      ["NIBP (Blutdruck)","Manschette, automatisch","individuell – Ausgangswert beachten!","Kreislaufstabilität"],
+      ["etCO₂ (Kapnographie)","Atemgasschlauch am Monitor","35–45 mmHg","Beatmung, Tubuslage, Kreislauf"],
+      ["Atemfrequenz / Volumen","Narkosegerät","AF 10–14/min","Beatmungsqualität"],
+    ]},
+    {t:"sec", text:"Kapnographie – warum ist das so wichtig?"},
+    {t:"highlight", title:"etCO₂ = CO₂ am Ende der Ausatmung", text:"Die Kapnographiekurve ist der sicherste Beweis für eine korrekte Tubuslage. Wenn der Tubus im Magen liegt: keine Kurve. Bei Herzstillstand: Kurve verschwindet sofort. Ein normaler etCO₂ zeigt: Patient wird beatmet, Herz pumpt, Tubus sitzt richtig."},
+    {t:"sec", text:"Zwei Monitorsysteme bei uns"},
+    {t:"cards", items:[
+      {icon:"🔵", color:"#005A6E", title:"Philips-System (Saal 1+2, 1. OG)", text:"Modernes System: der komplette Monitor wandert mit dem Patienten von der Einleitung in den Saal und weiter in den AWR. Kein Umklemmen nötig."},
+      {icon:"🟡", color:"#B45309", title:"Älteres Trägersystem (Saal 3+4)", text:"Wenn der Patient vom Einleitungsraum in den Saal gefahren wird: SpO₂, Blutdruck und EKG trennen (disconnect) und im Saal neu anschließen. Kurz: Beatmungsbeutel bereithalten!"},
+    ]},
+    {t:"sec", text:"Handlungsgrenzen – wann wird's ernst?"},
+    {t:"table", headers:["Parameter","Grenze","Was tun?"], rows:[
+      ["SpO₂","< 94 %","O₂ geben, Atemweg prüfen, Arzt rufen"],
+      ["RR systolisch","< 80 mmHg","Ephedrin bereit, Arzt informieren"],
+      ["HF","< 40 oder > 130","Arzt informieren"],
+      ["etCO₂","< 20 oder > 55 mmHg","Ventilation prüfen, Arzt rufen"],
+    ]},
+    {t:"sec", text:"Alarm Fatigue – Alarmmüdigkeit"},
+    {t:"cave", text:"Das Philips-System schlägt in der Einleitung sehr häufig roten Alarm wegen Atemfrequenz und etCO₂ – solange der Patient noch spontan atmet und noch nicht beatmet wird. Das ist technisch bedingt und kein echter Notfall. ABER: Diese Daueralarmierung führt zu Alarm Fatigue (Alarmmüdigkeit)! Das Gehirn blendet rote Alarme irgendwann aus – auch echte. Ein SpO₂-Abfall, ein Blutdrucksturz, eine Asystolie können so übersehen werden. Das ist ein bekanntes Patientensicherheitsproblem."},
+    {t:"info", title:"Grundregel: Jeden roten Alarm bewusst prüfen", items:[
+      "Atemfrequenz/etCO₂-Alarm in der Einleitung: Ursache kennen – trotzdem immer kurz prüfen",
+      "Niemals einen Alarm wegdrücken ohne hinzuschauen",
+      "Bei jedem roten Alarm: 2 Sekunden bewusst auf den Monitor: SpO₂? RR? HF? etCO₂-Kurve?",
+      "Echte Gefahr: SpO₂-Kurve weg, RR < 80 mmHg, flache Linie im EKG = sofort handeln",
+      "Wenn Alarmmüdigkeit im Team auffällt: ansprechen – das rettet Leben",
+    ]},
+  ],
+
+  atemwege:[
+    {t:"text", text:"Das Atemwegsmanagement ist eine der wichtigsten Aufgaben in der Anästhesie. Unter Narkose verliert der Patient seine Schutzreflexe und kann nicht mehr selbst atmen. Wir müssen den Atemweg sichern und kontrolliert beatmen."},
+    {t:"sec", text:"Die drei Atemwegshilfen"},
+    {t:"cards", items:[
+      {icon:"😷", color:"#0369A1", title:"Gesichtsmaske", text:"Für kurze Eingriffe oder zur Präoxygenierung vor der Intubation. Patient atmet über Maske, du hältst sie dicht (C-Griff). Kein Schutz vor Aspiration."},
+      {icon:"🫧", color:"#0E7490", title:"Larynxmaske (LMA)", text:"Wird in den Rachen eingeführt und liegt über dem Kehlkopfeingang. Für die meisten unserer Eingriffe ausreichend. Keine Aspiration ausschließbar – daher nur bei nüchternen Patienten."},
+      {icon:"🔵", color:"#005A6E", title:"Endotrachealtubus (ETT)", text:"Wird direkt in die Luftröhre eingeführt. Sicherste Atemwegssicherung, Schutz vor Aspiration. Nötig bei Aspirationsrisiko, Bauchlage, langen OPs."},
+    ]},
+    {t:"highlight", title:"C-MAC Videolaryngoskop", text:"Für schwierige Atemwege haben wir ein C-MAC Videolaryngoskop. Es zeigt den Kehlkopfeingang auf einem Bildschirm – hilfreich wenn die direkte Sicht schwierig ist."},
+    {t:"info", title:"Ausstattung C-MAC", items:[
+      "Spatel Größe 3 – Standard",
+      "D-Blade – besondere Kurve für sehr schwierige Atemwege. Tubus IMMER mit Führungsstab in Form bringen!",
+      "Für jeden Einsatz: Patientenkleber benötigt",
+      "Nach Einsatz: Reinigung auf spezielle Weise hinten im Steri – Einweisung vom erfahrenen Kollegen!",
+    ]},
+    {t:"cave", text:"D-Blade: Führungsstab darf NUR auf ausdrückliche Ansage des Anästhesisten unten aus dem Tubus herausschauen!"},
+    {t:"sec", text:"Schwieriger Atemweg – Stufenplan"},
+    {t:"table", headers:["Stufe","Hilfsmittel","Situation"], rows:[
+      ["1","Larynxmaske","Erster Schritt wenn Tubus nicht platzierbar"],
+      ["2","C-MAC Spatel 3","Schlechte direkte Laryngoskopie-Sicht"],
+      ["3","C-MAC D-Blade + Führungsstab","Sehr schwierige Anatomie"],
+      ["4","Esmarch-Draht (Seldinger)","Draht in Trachea, Tubus darüber"],
+      ["5","Not-Koniotomie-Set","CVCI – cannot ventilate, cannot intubate"],
+    ]},
+    {t:"cave", text:"CVCI (cannot ventilate – cannot intubate) ist der absolute Worst Case in der Anästhesie. Das Not-Koniotomie-Set ist die letzte Rettungsmöglichkeit. Standort und Handhabung unbedingt mit dem Anästhesisten besprechen – bevor es gebraucht wird!"},
+    {t:"sec", text:"Präoxygenierung – warum immer?"},
+    {t:"text", text:"Vor jeder Narkoseeinleitung: Patient 3–5 Minuten 100 % O₂ über Maske atmen lassen. Das füllt die Lunge mit Sauerstoff-Reserve – wir haben mehr Zeit für die Intubation bevor die Sättigung fällt."},
+    {t:"sec", text:"Was bereitest du vor?"},
+    {t:"list", items:[
+      "Maske in passender Größe (1–5) + Filter",
+      "Guedel-Tubus (Größe nach Patient) als Reserve",
+      "Larynxmaske in Größe 3 (Frau) oder 4 (Mann) – aufgeblasen auf Dichtigkeit testen",
+      "Tubus Größe 7,0–7,5 (Frau) / 7,5–8,0 (Mann) + Führungsstab",
+      "Spritze zum Blocken des Cuffs (10 ml)",
+      "Absaugung eingeschaltet und griffbereit",
+      "Beatmungsbeutel für Notfälle",
+    ]},
+    {t:"cave", text:"Die Absaugung muss IMMER eingeschaltet und erreichbar sein – bevor der Patient einschläft. Bei Erbrechen unter Einleitung sofort absaugen. Das ist keine Option, das ist Pflicht."},
+  ],
+
+  medikamente:[
+    {t:"text", text:"In der Anästhesie arbeiten wir täglich mit stark wirksamen Medikamenten. Du musst wissen: was macht das Mittel, wie wird es dosiert, welche Nebenwirkungen hat es."},
+    {t:"sec", text:"Schlafmittel / Hypnotika"},
+    {t:"table", headers:["Medikament","Wirkung","Bemerkung"], rows:[
+      ["Propofol (10 mg/ml = 1%)","Einleitung und Aufrechterhaltung der Narkose","Weiße Emulsion. NUR 1% bei uns – keine andere Konzentration vorhanden. Kann RR senken!"],
+      ["Sevofluran (Inhalation)","Narkosegas zur Aufrechterhaltung","Konzentration am Narkosegerät eingestellt, Abgasleitung!"],
+    ]},
+    {t:"sec", text:"Opiate / Analgetika"},
+    {t:"table", headers:["Medikament","Ampulle","Wann?"], rows:[
+      ["Fentanyl","10 ml, 0,5 mg (50 µg/ml)","Stationäre Eingriffe – BtM!"],
+      ["Sufentanil","2 ml, 0,05 mg/ml","Je nach Arztvorliebe – BtM!"],
+      ["Alfentanil","2 ml, 5 mg/ml","Ambulante Eingriffe (kürzere Wirkdauer) – BtM!"],
+    ]},
+    {t:"cave", text:"Opiate sind betäubungsmittelpflichtig (BtM)! Jede Ampulle muss im BtM-Buch dokumentiert werden. Opiatschlüssel: während des Dienstes in Schublade Einleitung 3, außerhalb des Dienstes auf Station 2 im Safe."},
+    {t:"sec", text:"Muskelrelaxans"},
+    {t:"table", headers:["Medikament","Wirkung","Bemerkung"], rows:[
+      ["Atracurium","Lähmung der Skelettmuskulatur","Erleichtert Intubation + Operationsbedingungen. Täglich aus Kühlschrank holen!"],
+    ]},
+    {t:"sec", text:"Notfallmedikamente"},
+    {t:"table", headers:["Medikament","Wirkung","Standard-Vorbereitung"], rows:[
+      ["Atropin (0,5 mg/ml)","Bradykardie-Therapie, Sekretreduktion","Täglich aus Kühlschrank, auf alle Einleitungen verteilen"],
+      ["Ephedrin","Blutdruckanstieg bei Hypotonie","5 ml aufziehen, 6 mg/ml. Immer griffbereit, beschriftet."],
+    ]},
+    {t:"sec", text:"Weitere Medikamente am Saalschrank"},
+    {t:"info", title:"Immer verfügbar", items:[
+      "Clonidin – Kreislaufmodulation, Sedierung",
+      "Novalgin 1 mg/ml – Schmerztherapie",
+      "Dexamethason – PONV-Prophylaxe (gegen Übelkeit)",
+      "Ondansetron – PONV-Prophylaxe",
+      "Tranexamsäure – Blutungsminimierung",
+      "Propofol, Perfusorspritzen, Mini-Spikes, Infusionen",
+    ]},
+    {t:"sec", text:"Im Aufwachraum: Piritramid"},
+    {t:"info", title:"Piritramid (7,5 mg/ml) – BtM!", items:[
+      "Starkes Opioid für postoperative Schmerztherapie",
+      "Fraktioniert geben: 3,75 mg i.v. (= halbe Ampulle)",
+      "Maximal 2 Ampullen gesamt (= 15 mg)",
+      "Dokumentation: Akte + BtM-Buch – beide!",
+    ]},
+    {t:"cave", text:"Piritramid kann Atemdepression verursachen! SpO₂ nach Gabe engmaschig überwachen. Bei SpO₂ < 94 %: O₂ nasal, Arzt rufen. Im Zweifel lieber weniger geben und nachfragen."},
+  ],
+
+  struktur:[
+    {t:"sec", text:"Erdgeschoss – Großraum OP"},
+    {t:"cards", items:[
+      {icon:"🔵", color:"#005A6E", title:"Saal 1 & 2 + Einleitung 1 & 2", text:"Philips-Monitor-System. Monitor wandert komplett mit Patient. Kein Umklemmen beim Saaltransport."},
+      {icon:"🟡", color:"#B45309", title:"Saal 3 & 4 + Einleitung 3", text:"Ältere Trägersysteme. Beim Saaltransport: SpO₂, RR und EKG disconnect → im Saal neu anschließen. Beatmungsbeutel mitführen!"},
+      {icon:"⚠️", color:"#C0392B", title:"Saal 3 & 4 teilen Einleitung 3!", text:"Morgens Absprache nötig: wer leitet zuerst ein? Bei Konflikt: Ausweichen auf Einleitung 1 (Backup-Monitor steht bereit)."},
+    ]},
+    {t:"cave", text:"Wenn Saal 3 und Saal 4 beide morgens ein Regionalverfahren brauchen: erst Narkose in der Einleitung, dann Regionalblock im Saal (quer vor den Eingang stellen)."},
+    {t:"sec", text:"1. Obergeschoss"},
+    {t:"list", items:[
+      "Urologisches Röntgen (Tel. 362) – kein separater Einleitungsraum",
+      "Kleiner Eingriffsraum (Tel. 363) – Einleitung direkt im Saal",
+      "Kein eigenes Einleitungszimmer → Patienten im AWR vorbereiten",
+      "Patienten gehen selbstständig zum OP, Rückkehr per Rollbrett",
+      "Bei ambulantem Programm: Anästhesieteam aus Wellingdorf übernimmt",
+    ]},
+    {t:"sec", text:"Aufwachraum (AWR)"},
+    {t:"table", headers:["Sektor","Plätze","Besonderheit"], rows:[
+      ["Stationär","5–6","Vollmonitoring, Verlegung nach Standard"],
+      ["Ambulant","4","Essen/Trinken erlaubt, Entlassung nach Visite"],
+    ]},
+    {t:"sec", text:"Material – Wichtiger Unterschied EG vs. 1. OG"},
+    {t:"cards", items:[
+      {icon:"📦", color:"#005A6E", title:"EG: Schubladen!", text:"Kein Anästhesiewagen. Alles Material liegt in den Schubladen der Einleitung und der Säle. Lerne wo was liegt!"},
+      {icon:"🛒", color:"#0E7490", title:"1. OG: Anästhesiewagen", text:"Im ersten Obergeschoss gibt es Anästhesiewagen mit Standardbestückung."},
+    ]},
+  ],
+
+  morgen:[
+    {t:"sec", text:"Dienstzeiten im Überblick"},
+    {t:"table", headers:["Tag","Zeit","Bemerkung"], rows:[
+      ["Mo – Do","07:00 – 15:30 Uhr","Pünktlich 7:00 Uhr im Saal. Rüstzeit am Ende."],
+      ["Freitag","07:00 – 14:00 Uhr",""],
+      ["8-Uhr-Dienst Mo–Do","08:00 – 16:30 Uhr","Bleibt bis alles fertig ist. Darf gehen wenn: nur noch 1 Saal + AWR leer ODER kein Saal mehr + AWR noch belegt → AWR fertig machen, dann gehen."],
+      ["8-Uhr-Dienst Fr","08:00 – 15:00 Uhr","Gleiche Regel wie Mo–Do. Bleibt bis alles fertig – kein festes Dienstende solange noch Patienten da sind."],
+    ]},
+    {t:"sec", text:"Morgendliche Geräteüberprüfung"},
+    {t:"list", items:[
+      "Narkosegerät: Lecktest und Einsatzfähigkeit prüfen",
+      "Absaugung: einschalten und Funktion testen",
+      "Narkoseabgasführung: wieder einstecken!",
+      "Kühlschrank: Atropin und Atracurium holen und verteilen",
+      "Wer macht welchen Saal / welche Einleitung? → Absprache im Team",
+    ]},
+    {t:"cave", text:"Die Abgasleitung jeden Morgen einstecken! Vergessen = Sevofluran in der Raumluft = Gesundheitsrisiko für alle im Saal."},
+    {t:"sec", text:"Ambulante Patienten – Aufnahme ab 06:45 Uhr"},
+    {t:"highlight", title:"Maike fängt früher an", text:"Die ambulante Patientenaufnahme beginnt um 06:45 Uhr – 15 Minuten vor dem regulären Dienstbeginn."},
+    {t:"list", items:[
+      "Patienten in den AWR (ambulanter Sektor) holen",
+      "Abfragen: Nüchternheit? Abholung organisiert? Allergien/Kleber? Gehhilfen? Frühstück?",
+      "Patient zieht sich um → Netzschlüpfer",
+      "Ins zugewiesene Bett setzen → Kläppchen ans Bett → Armband anlegen",
+      "Seite markieren, ggf. rasieren",
+      "Einschleusereihenfolge mit Schleusenpersonal absprechen",
+    ]},
+    {t:"sec", text:"In der Einleitung"},
+    {t:"list", items:[
+      "Narkosezubehör vorbereiten (Infusion, Spritzen, Monitoring)",
+      "Patienten Identität prüfen: Name, Geburtsdatum, Eingriff, Seite",
+      "Nüchternheit, Medikamente, Allergien, Zahnprothesen abfragen",
+      "EKG, SpO₂, Blutdruck anlegen, i.v.-Zugang legen (mind. 20 G)",
+      "Narkoseverfahren mit Anästhesisten besprechen",
+      "Narkose einleiten, Atemweg sichern, Lagerung beginnen",
+    ]},
+    {t:"sec", text:"Postoperativ & Dienstende"},
+    {t:"list", items:[
+      "Patienten aus Schleuse in den AWR begleiten, in Lagerungsbett umlagern",
+      "Monitoring anschließen, Übergabe vom Anästhesisten",
+      "Patient überwachen bis Verlegungskriterien erfüllt",
+      "Saaldokumentation, Betäubungsmittelbuch führen",
+      "Opiatschlüssel am Dienstende nach oben geben",
+    ]},
+    {t:"sec", text:"Dienstende – so läuft die Übergabe"},
+    {t:"list", items:[
+      "Letzten Patienten im AWR verlegen",
+      "Beide BtM-Schlüssel (EG + AWR) auf Station 2 bringen",
+      "Rufumleitung auf Tel. 335 einrichten",
+      "Kontrollanruf beim Rufdienst-Kollegen: alle Patienten verlegt? Rufumleitung funktioniert?",
+      "Erst dann: Feierabend",
+    ]},
+    {t:"cave", text:"Kontrollanruf ist Pflicht – nicht optional! Er bestätigt: Patienten sicher verlegt UND Rufdienst ist erreichbar. Geht der Anruf nicht durch: Rufumleitung nochmal einrichten."},
+    {t:"sec", text:"Rufbereitschaft"},
+    {t:"info", title:"", items:[
+      "Von zu Hause – ausschließlich erreichbar über Rufumleitung Tel. 335",
+      "Wochentags: von Dienstende bis 7:00 Uhr nächsten Morgen",
+      "Freitag 14:00 Uhr bis Montag 7:00 Uhr durchgehend",
+      "Feiertage: jede/r übernimmt einen. Zwischen Weihnachten und Neujahr: Klinik geschlossen.",
+    ]},
+  ],
+
+  regional:[
+    {t:"text", text:"Regionalanästhesie-Verfahren sind ein wichtiger Bestandteil unserer täglichen Arbeit. Als Pflegekraft bist du für die Vorbereitung und Assistenz zuständig. Der Anästhesist führt das Verfahren durch."},
+    {t:"cave", text:"NUR gelb markierte Spritzen, Ansätze und Stöpsel für Regionalanästhesie! Diese passen nicht in i.v.-Leitungen – so wird eine versehentliche i.v.-Gabe verhindert. Normale Luer-Spritzen sind verboten für Regionalanästhesie!"},
+    {t:"sec", text:"Was du immer vorbereiten musst"},
+    {t:"list", items:[
+      "Schale + Unterlegtuch",
+      "Überziehhandschuhe + sterile Handschuhe",
+      "Gelbe Spritzen in der richtigen Größe (mit Medikament aufgezogen)",
+      "Spezielle Ansätze und Stöpsel (gelb markiert)",
+      "Sononadel von Pajunk",
+      "Sonographiegerät: Patientendaten eingeben, Sonographiegel",
+      "Sterile Hülle für den Schallkopf (Handschuh oder sterile Überziehhülle)",
+    ]},
+    {t:"sec", text:"Ropivacain – Verdünnung"},
+    {t:"info", title:"Wir haben nur 0,5 % – für 0,25 % immer verdünnen", items:[
+      "10 ml Ropivacain 0,5 % + 10 ml NaCl 0,9 % = 20 ml Ropivacain 0,25 %",
+      "In die gelbe Spritze aufziehen!",
+      "Nie in normale Luer-Spritze für Regionalanästhesie",
+    ]},
+    {t:"sec", text:"Deine Assistenz Schritt für Schritt"},
+    {t:"list", items:[
+      "Material steril vorbereiten, Schale aufbauen",
+      "Anästhesist zieht sterile Handschuhe an",
+      "Du übergibst die sterile Schallkopfhülle und das sterile Gel / Desinfektionsmittel",
+      "Wenn Zielgebiet gefunden: Sononadel steril anreichen (Spritze schon angeschlossen)",
+      "Auf Anforderung 'Aspiriere!' – kurz zurückziehen, schauen ob Blut zurückkommt",
+      "Auf Anforderung 'Injiziere!' – Medikament langsam applizieren",
+      "Nadel herausziehen → leere Spritze loslassen → Arzt hält alles steril hoch",
+      "Neue Spritze ansetzen, durchspülen",
+      "FOTOS im Sonographiegerät – immer! (Dokumentation der Nadelposition)",
+    ]},
+    {t:"sec", text:"Welche Blöcke wann?"},
+    {t:"table", headers:["Block","OP","Volumen","Konzentration"], rows:[
+      ["Femoralis","Knie","20 ml","Ropi 0,25 %"],
+      ["Ischiadicus distal","Knie","20 ml","Ropi 0,25 %"],
+      ["Interskalenusblock","Schulter","20 ml","Ropi 0,25 %"],
+      ["Fußblock","Fuß","2×5 ml + 2×10 ml","0,5 % + 0,25 %"],
+      ["Axillärer Block","Arm","40 ml","Ropi 0,25 %"],
+    ]},
+  ],
+
+  lagerung:[
+        {t:"sec", text:"Patientenbestellung – Ablauf"},
+    {t:"cards", items:[
+      {icon:"🛏️", color:"#005A6E", title:"Stationäre Patienten", text:"Bestellung rechtzeitig über die Station. Station wird informiert, wann der Patient benötigt wird."},
+      {icon:"🚶", color:"#0E7490", title:"Ambulante Patienten", text:"In der Schleuse Bescheid geben, dass der Patient aus dem ambulanten Bereich eingeschleust werden darf."},
+      {icon:"🏥", color:"#1D4ED8", title:"1. OG – geplante ambulante OPs", text:"Anästhesiepflegedienst aus Wellingdorf übernimmt den Aufwachraum im 1. OG bei geplanten ambulanten Programmen."},
+    ]},
+    {t:"sec", text:"Besonderheit: MIC Hüft-OPs"},
+    {t:"highlight", title:"Nur ein spezieller Tisch im Haus!", text:"Für MIC Hüft-Operationen gibt es nur einen einzigen speziellen Tisch. Das bedeutet: der Tisch muss nach jeder OP vollständig gereinigt werden bevor der nächste Patient eingeschleust wird. Timing und Ablauf müssen entsprechend geplant werden."},
+    {t:"list", items:[
+      "Patient rechtzeitig in den AWR bestellen",
+      "Tisch nach vorheriger OP reinigen – erst dann nächsten Patienten einschleusen",
+      "Patient wird vor den AWR gestellt (noch nicht eingeschleust)",
+      "Im AWR: i.v.-Zugang legen und Blutentnahme vorbereiten damit es zeitnah losgehen kann",
+      "Dieser Operateur möchte immer vorab mit dem Patienten sprechen – Zeit einplanen!",
+    ]},
+    {t:"info", title:"Bei ALLEN Hüft-OPs (jeder Art)", items:[
+      "EDTA-Röhrchen abnehmen",
+      "Blutgruppe bestimmen lassen",
+      "Konserven nach Rücksprache mit dem Arzt bereitstellen",
+    ]},
+    {t:"cave", text:"Blutgruppenbestimmung und Konserven-Vorbereitung gilt für ALLE Hüft-OPs – nicht nur MIC. Immer EDTA-Röhrchen abnehmen und Rücksprache mit dem Anästhesisten halten."},
+    {t:"highlight", title:"Verantwortung beim Operateur", text:"Die endgültige Abnahme und Freigabe der Lagerung liegt immer beim Operateur. Du bereitest vor und hilfst – aber der Chirurg gibt das finale OK."},
+    {t:"sec", text:"Welche Lagerungen gibt es?"},
+    {t:"table", headers:["Lagerung","Welche OPs","Was ist besonders?"], rows:[
+      ["Rückenlage","Knie, Fuß, Hüfte, Arm, Leiste – die meisten OPs","Standard. Arme angelegt oder auf Armstützen."],
+      ["Bauchlage","LWS-Bandscheiben-OP, Ellenbogen-Arthroskopie","Nach Umlagern sofort Beatmung + SpO₂ prüfen! Augen schützen!"],
+      ["Beach Chair (sitzend)","Schulter-OPs","Oberkörper 60–80° aufrecht. Kopf in Halterung. RR kann abfallen!"],
+    ]},
+    {t:"cave", text:"Bauchlage ist ein kritischer Moment in der Narkose! Nach dem Umlagern sofort prüfen: Atmet der Patient? Stimmt die etCO₂-Kurve? Sitzt der Tubus noch? Augen müssen gepolstert und geschlossen sein – Druckschäden am Auge sind irreversibel!"},
+    {t:"cave", text:"Beach Chair: Der aufrechte Oberkörper kann den Blutdruck deutlich senken. Ephedrin griffbereit. Engmaschige RR-Kontrolle nach dem Aufrichten."},
+    {t:"sec", text:"Blutsperre (Tourniquet) – was ist das?"},
+    {t:"text", text:"Bei fast allen Eingriffen an Armen und Beinen wird eine aufblasbare Manschette (Tourniquet) angelegt, die die Blutversorgung zur Extremität unterbricht. So kann der Operateur in einem fast blutfreien Feld arbeiten."},
+    {t:"list", items:[
+      "Watte gleichmäßig um die Extremität wickeln (Polsterschutz!)",
+      "Tourniquet-Manschette in passender Größe darüber anlegen",
+      "Mit Nasskleber-Fixierpflaster (Utz-Pflaster) sichern",
+      "Aufblasen und Druckeinstellung macht der Operateur",
+    ]},
+    {t:"table", headers:["Extremität","Manschettengröße","Wo angelegt?"], rows:[
+      ["Oberschenkel / Knie","L oder XL","Proximal Oberschenkel"],
+            ["Oberarm / Ellenbogen","L oder XL","Proximal Oberarm"],
+          ]},
+    {t:"sec", text:"Beinlagerung – zwei häufige Varianten"},
+    {t:"cards", items:[
+      {icon:"🦵", color:"#0369A1", title:"Frei in Halterung", text:"Das Bein liegt frei in einer Beinhalterung – flexibel positionierbar. Häufig bei Knie-Arthroskopie."},
+      {icon:"🦵", color:"#0F766E", title:"Knierolle + Seitenstütze", text:"Knie über eine Knierolle aufgestellt, Seitenstütze hält das Bein stabil. Für längere oder komplexere Eingriffe."},
+    ]},
+    {t:"sec", text:"Kabelmanagement – das musst du verinnerlichen"},
+    {t:"cave", text:"CAVE: Niemals etwas über Beatmungsschläuche, Narkosemaske, i.v.-Zugänge oder Infusionsleitungen legen! Alle Kabel (EKG, SpO₂, Blutdruck, etCO₂) werden darunter geführt. Kabel auf der Maske bricht die Abdichtung. Druck auf i.v.-Zugang kann Medikamentengabe unterbrechen – im schlimmsten Fall unbemerkt."},
+    {t:"list", items:[
+      "EKG-Kabel: seitlich am Körper entlang nach unten",
+      "SpO₂-Kabel: am Arm entlang, nicht über Brust oder Gesicht",
+      "Blutdruckschlauch: seitlich – niemals über Gesicht oder Hals",
+      "etCO₂-Schlauch: am Beatmungsschlauch entlang führen",
+      "Vor jeder Umlagerung: alle Kabel überprüfen und sichern",
+      "Nach jeder Umlagerung: sofort alle Werte kontrollieren",
+    ]},
+  ],
+
+  awr:[
+    {t:"text", text:"Der Aufwachraum (AWR) ist die erste Station nach der Narkose. Hier überwachst du den Patienten, bis er stabil genug für die Verlegung ist. Die Arbeit hier ist anspruchsvoll – die kritische Phase der Narkose ist noch nicht vorbei."},
+    {t:"sec", text:"Patientenübernahme"},
+    {t:"list", items:[
+      "Patient aus der Schleuse in den AWR fahren, ins Lagerungsbett umlagern",
+      "Sofort Monitoring anschließen: EKG, SpO₂, Blutdruck",
+      "Detaillierte Übergabe vom Anästhesisten erhalten",
+      "Atemwegssituation sofort beurteilen: atmet der Patient ausreichend?",
+      "Kreislaufwerte prüfen",
+    ]},
+    {t:"sec", text:"Postoperative Analgesie"},
+    {t:"info", title:"Piritramid (BtM) – Standard im AWR", items:[
+      "Ampulle: 7,5 mg/ml (= eine Ampulle = 7,5 mg)",
+      "Fraktioniert geben: 3,75 mg i.v. (= halbe Ampulle)",
+      "Maximal 2 Ampullen gesamt",
+      "Dokumentation: Akte UND BtM-Buch",
+      "Schmerzen weiterhin stark: Rücksprache Dr. Serocki Tel. 375 oder Vertreter (tagsüber) / Tel. 374 nachts + Wochenende",
+    ]},
+    {t:"cave", text:"Piritramid → Atemdepression möglich! SpO₂ nach Gabe engmaschig beobachten. Sauerstoff nasal anschließen wenn du unsicher bist. SpO₂ < 94 % → O₂ geben + Arzt informieren. Atemfrequenz beobachten."},
+    {t:"sec", text:"Wann darf der Patient verlegt werden?"},
+    {t:"table", headers:["Kriterium","Ziel"], rows:[
+      ["Bewusstsein","Wach, orientiert zu Person und Ort"],
+      ["Atmung","SpO₂ ≥ 94 % ohne O₂, Atemfrequenz normal"],
+      ["Kreislauf","RR und HF stabil, im Normbereich"],
+      ["Schmerzen","Tolerabel, NRS ≤ 3–4"],
+    ]},
+    {t:"sec", text:"Ambulante Patienten – Entlassung"},
+    {t:"list", items:[
+      "Transfer in ambulanten Bereich wenn: wach, adäquat, schmerzarm",
+      "Darf essen und trinken (Wasser, Kaffee, Frühstück)",
+      "Entlassung NUR nach ärztlicher Visite",
+      "Ablauf: Mobilisation testen → anziehen → DANN Venenzugang ziehen",
+    ]},
+    {t:"cave", text:"Venenzugang immer ZULETZT ziehen! Erst wenn der Patient angezogen ist und aufgestanden ist. Falls er dabei kollabiert, kannst du sofort i.v. behandeln. Ganz wichtig!"},
+  ],
+
+  notfall:[
+    {t:"text", text:"Notfälle in der Anästhesie sind selten, aber du musst vorbereitet sein. Kenne die Standorte aller Notfallmittel, bevor du alleine arbeitest."},
+    {t:"sec", text:"Notfallequipment – Standorte"},
+    {t:"cards", items:[
+      {icon:"📦", color:"#C0392B", title:"Reanimationsbox", text:"ZWEI Standorte: EG: kleiner Kühlschrank im Einleitungsbereich (wo das Atracurium liegt). 1. OG: Kühlschrank neben dem Eingriffsraum, gegenüber der Küche. Atropin liegt NICHT in dieser Kiste – das ist im großen Kühlschrank. (EG, Einleitungsbereich). Enthält Adrenalin, Amiodaron und alle Medikamente für die Reanimation."},
+      {icon:"⚡", color:"#B45309", title:"Defibrillator", text:"Im Aufwachraum. Regelmäßig auf Einsatzbereitschaft prüfen. Zeigt an wenn Batterie leer."},
+      {icon:"🛒", color:"#005A6E", title:"Notfallwagen AWR", text:"Im AWR vollständig bestückt. Täglich auf Vollständigkeit prüfen."},
+      {icon:"🎥", color:"#6D28D9", title:"Videolaryngoskop", text:"Für schwierige Atemwege. Standort mit dem Anästhesisten klären. Zeigt Kehlkopf auf Bildschirm."},
+    ]},
+    {t:"sec", text:"Interne Notfallkette"},
+    {t:"table", headers:["Schritt","Aktion","Kontakt"], rows:[
+      ["1","Laut um Hilfe rufen","–"],
+      ["2","Anästhesist: Dr. Serocki od. Vertreter (tagsüber)","Tel. 375"],
+      ["3","Ärztl. Bereitschaftsdienst (nachts / WE)","Tel. 374"],
+      ["4","Defi aus AWR holen","AWR"],
+      ["5","Reanimationsbox aus Kühlschrank","EG Kühlschrank"],
+      ["6","Externe 112 wenn nötig","Über Zentrale 300"],
+    ]},
+    {t:"cave", text:"Niemand reanimiert allein! Immer sofort laut Hilfe holen. Du bist nicht alleine verantwortlich – aber du musst die Kette in Gang setzen."},
+    {t:"sec", text:"Häufige Notfallsituationen in der Anästhesie"},
+    {t:"table", headers:["Situation","Zeichen","Erste Maßnahme"], rows:[
+      ["Laryngospasmus","SpO₂ fällt, kein Atemgeräusch, Thoraxbewegung","O₂ 100 %, CPAP, Arzt sofort"],
+      ["Hypotonie","RR < 80 mmHg","Ephedrin, Arzt informieren, Lagerung"],
+      ["Bradykardie","HF < 40/min","Atropin, Arzt sofort"],
+      ["Atemstillstand im AWR","SpO₂ fällt, keine Atembewegung","O₂ nasal, stimulieren, Arzt sofort"],
+    ]},
+  ],
+
+  telefon:[
+    {t:"sec", text:"Alle Durchwahlnummern – Heliosklinik Kiel"},
+    {t:"phonetable", rows:[
+      ["Zentrale (extern)","0431-7206-300",""],
+      ["Station 2","355","Stationäre Patienten"],
+      ["Station 3","366","Stationäre Patienten"],
+      ["Hr. Hüter","361",""],
+      ["TL Anästhesie","381","Teamleitung – deine erste Ansprechperson"],
+      ["TL OP","378","Teamleitung OP"],
+      ["OP Saal 1","301",""],
+      ["OP Saal 2","302",""],
+      ["OP Saal 3","303",""],
+      ["OP Saal 4","357",""],
+      ["Dr. Serocki od. Vertreter","375","Tagsüber – Schmerzrücksprache / Notfall"],
+      ["AWR / Rufdienst","335","Rufdienstumleitung – ausschließlich diese Nummer"],
+      ["Anästhesie 1. OG","379",""],
+      ["Eingriffsraum 1. OG","363",""],
+      ["Uro Röntgen 1. OG","362",""],
+      ["Ärztl. Bereitschaftsdienst","374","Nachts + Wochenende (nicht tagsüber!)"],
+      ["Technik","370 / 371",""],
+    ]},
+    {t:"highlight", title:"Die drei wichtigsten Nummern auswendig lernen", text:"TL Anästhesie: 381 · Dr. Serocki: 375 (tagsüber) · Bereitschaftsdienst: 374 (nachts + WE)"},
+  ],
+
+  checkliste:[
+    {t:"sec", text:"Lerncheckliste – Einarbeitung Einsteiger"},
+    {t:"cl_group", title:"1. Grundlagen verstanden", id:"g0", items:[
+      "Unterschied Allgemeinanästhesie / Regionalanästhesie erklären können",
+      "Die vier Säulen der Allgemeinanästhesie benennen",
+      "Wann welches Opioid (Fentanyl / Alfentanil) und warum",
+      "Zweck der Kapnographie erklären können",
+      "Unterschied Philips-Monitor vs. Trägersystem bekannt",
+    ]},
+    {t:"cl_group", title:"2. Hausrundgang & Orientierung", id:"g1", items:[
+      "Alle Säle und Einleitungsräume bekannt",
+      "Standort Kühlschrank (Atropin, Atracurium, Reanimationsbox)",
+      "Standort Defibrillator + Notfallwagen AWR",
+      "Standort Videolaryngoskop bekannt",
+      "Telefonliste auswendig: TL 381, Serocki 375 (tagsüber), Bereitschaft 374 (nachts+WE)",
+    ]},
+    {t:"cl_group", title:"3. Geräteprüfung & Tagesbeginn", id:"g2", items:[
+      "Lecktest Narkosegerät eigenständig durchgeführt",
+      "Abgasleitung eingesteckt",
+      "Absaugung geprüft",
+      "Atropin + Atracurium aus Kühlschrank geholt und verteilt",
+      "Ambulante Patientenaufnahme (Nüchternheit, Armband, Seite) durchgeführt",
+    ]},
+    {t:"cl_group", title:"4. Monitoring & Einleitung", id:"g3", items:[
+      "EKG, SpO₂, Blutdruckmanschette selbstständig angelegt",
+      "i.v.-Zugang 18 G gelegt",
+      "Ephedrin 6 mg/ml korrekt aufgezogen und beschriftet",
+      "Narkosevorbereitung (Infusion, Perfusor, Opiat, Atropin) eigenständig",
+      "Saaltransfer Saal 3/4: Disconnect + Neuanschluss korrekt",
+    ]},
+    {t:"cl_group", title:"5. Atemwegsmanagement", id:"g4", items:[
+      "Maskengriff (C-Griff) korrekt demonstriert",
+      "Larynxmaske korrekt eingeführt (unter Aufsicht)",
+      "Intubationsassistenz: Absaugung, Führungsstab, Cuff-Kontrolle",
+      "Kapnographiekurve lesen und beurteilen können",
+      "Videolaryngoskop-Handhabung bekannt",
+    ]},
+    {t:"cl_group", title:"6. Regionalanästhesie-Assistenz", id:"g5", items:[
+      "Ropivacain 0,25 % korrekt verdünnt (1:1 mit NaCl)",
+      "Gelbe Spritzen / Ansätze / Stöpsel verwendet",
+      "Sterile Schallkopfhülle übergeben",
+      "Nadel steril angereicht, aspiriert, auf Anforderung injiziert",
+      "Dokumentationsfoto im Sonographiegerät gemacht",
+    ]},
+    {t:"cl_group", title:"7. Aufwachraum & Analgesie", id:"g6", items:[
+      "Übernahme und Monitoring-Anschluss eigenständig",
+      "Piritramid: Dosierung und Fraktionierung korrekt",
+      "BtM-Buch: Eintragung korrekt durchgeführt",
+      "Verlegungskriterien stationär angewendet",
+      "Entlassungsprocedere ambulant (Zugang zuletzt ziehen) korrekt",
+    ]},
+    {t:"cl_group", title:"8. Notfall & BtM", id:"g7", items:[
+      "Notfallkette kennen und benennen können (1–6)",
+      "Reanimationsbox gefunden und Inhalt bekannt",
+      "Defibrillator bedienen können (unter Anleitung)",
+      "Opiatschlüssel-Regelung (Dienstzeit / außerhalb) bekannt",
+      "BtM-Buchführung: eigenständig korrekt eingetragen",
+    ]},
+    {t:"sign"},
+  ],
+};
+
+let active = "willkommen";
+let checked = JSON.parse(localStorage.getItem("hk_einsteiger_checks") || "{}");
+
+function saveChecks() { localStorage.setItem("hk_einsteiger_checks", JSON.stringify(checked)); }
+
+function countTotals() {
+  let t = 0;
+  Object.values(content).forEach(blocks => blocks.forEach(b => { if(b.t==="cl_group") t += b.items.length; }));
+  return t;
+}
+function countChecked() { return Object.values(checked).filter(Boolean).length; }
+
+function updateBadge() {
+  const total = countTotals(), done = countChecked();
+  document.getElementById("check-count").textContent = done;
+  document.getElementById("check-total").textContent = total;
+  document.getElementById("progress-fill").style.width = (total > 0 ? done/total*100 : 0) + "%";
+}
+
+function renderContent() {
+  const ch = chapters.find(c => c.id === active);
+  document.getElementById("ch-icon").textContent = ch.icon;
+  document.getElementById("ch-title").textContent = ch.title;
+  document.getElementById("ch-sub").textContent = ch.sub;
+  document.getElementById("ch-header").style.background = ch.color;
+
+  document.getElementById("pills").innerHTML = chapters.map(c =>
+    `<button class="pill ${c.id===active?"active":""}" style="${c.id===active?"background:"+c.color+";border-color:"+c.color:""}" onclick="navigate('${c.id}')">${c.icon} ${c.title}</button>`
+  ).join("");
+
+  document.getElementById("drawer-items").innerHTML = chapters.map(c =>
+    `<button class="drawer-item ${c.id===active?"active":""}" onclick="navigate('${c.id}')">
+      <span class="di-icon">${c.icon}</span>
+      <div><div class="di-title">${c.title}</div><div class="di-sub">${c.sub}</div></div>
+    </button>`
+  ).join("");
+
+  document.getElementById("content-card").innerHTML = (content[active]||[]).map(b => renderBlock(b)).join("");
+
+  document.querySelectorAll(".cl-item").forEach(el => {
+    el.addEventListener("click", () => {
+      const key = el.dataset.key;
+      checked[key] = !checked[key];
+      el.classList.toggle("checked", checked[key]);
+      el.querySelector(".cl-box").textContent = checked[key] ? "✓" : "";
+      saveChecks(); updateBadge();
+      updateGroupProgress(el.closest(".cl-group"));
+    });
+  });
+
+  const idx = chapters.findIndex(c => c.id === active);
+  const prev = chapters[idx-1], next = chapters[idx+1];
+  document.getElementById("nav-footer").innerHTML =
+    `${prev ? `<button class="nav-btn" onclick="navigate('${prev.id}')">← ${prev.icon} ${prev.title}</button>` : "<div style='flex:1'></div>"}
+     ${next ? `<button class="nav-btn next" onclick="navigate('${next.id}')">${next.icon} ${next.title} →</button>` : "<div style='flex:1'></div>"}`;
+
+  updateBadge();
+}
+
+function updateGroupProgress(g) {
+  if(!g) return;
+  const done = g.querySelectorAll(".cl-item.checked").length;
+  const total = g.querySelectorAll(".cl-item").length;
+  g.querySelector(".cl-progress").textContent = done+"/"+total;
+  g.classList.toggle("done", done===total);
+}
+
+function renderBlock(b) {
+  switch(b.t) {
+    case "sec": return `<div class="sec-heading">${b.text}</div>`;
+    case "cave": return `<div class="cave"><strong>⚠ CAVE: </strong>${b.text}</div>`;
+    case "highlight": return `<div class="highlight">${b.title?`<strong>${b.title}</strong>`:""}${b.text}</div>`;
+    case "amberbox": return `<div class="amberbox"><strong>${b.title}</strong>${b.text}</div>`;
+    case "info": return `<div class="infobox">${b.title?`<div class="infobox-title">${b.title}</div>`:""}<ul>${b.items.map(i=>`<li>${i}</li>`).join("")}</ul></div>`;
+    case "text": return `<p class="content-text">${b.text}</p>`;
+    case "list": return `<ul class="content-list">${b.items.map(i=>`<li>${i}</li>`).join("")}</ul>`;
+    case "cards": return `<div class="cards">${b.items.map(c=>`<div class="card" style="border-top-color:${c.color}"><div class="c-icon">${c.icon}</div><div class="c-title" style="color:${c.color}">${c.title}</div><div class="c-text">${c.text}</div></div>`).join("")}</div>`;
+    case "table": return `<div class="tbl-wrap"><table><thead><tr>${b.headers.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${b.rows.map(r=>`<tr>${r.map((c,i)=>`<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    case "phonetable": return `<div class="tbl-wrap"><table><thead><tr><th>Bereich</th><th>Durchwahl</th><th>Hinweis</th></tr></thead><tbody>${b.rows.map(r=>`<tr><td>${r[0]}</td><td><span class="phone-badge">${r[1]}</span></td><td style="color:#6B7280;font-style:italic">${r[2]}</td></tr>`).join("")}</tbody></table></div>`;
+    case "cl_group": {
+      const items = b.items.map((item,i)=>{
+        const key=`${b.id}_${i}`, done=!!checked[key];
+        return `<div class="cl-item ${done?"checked":""}" data-key="${key}"><div class="cl-box">${done?"✓":""}</div><span class="cl-label">${item}</span></div>`;
+      }).join("");
+      const done = b.items.filter((_,i)=>checked[`${b.id}_${i}`]).length;
+      return `<div class="cl-group ${done===b.items.length?"done":""}">
+        <div class="cl-group-header"><span class="cl-group-title">${b.title}</span><span class="cl-progress">${done}/${b.items.length}</span></div>
+        <div class="cl-items">${items}</div>
+      </div>`;
+    }
+    case "sign": return `<div class="sign-block"><div><div class="sign-role">Mitarbeiterin / Mitarbeiter</div><div class="sign-line"></div><div class="sign-hint">Unterschrift / Datum</div></div><div><div class="sign-role">Praxisanleitung</div><div class="sign-line"></div><div class="sign-hint">Unterschrift / Datum</div></div></div>`;
+    default: return "";
+  }
+}
+
+function navigate(id) { active=id; closeDrawer(); renderContent(); window.scrollTo({top:0,behavior:"smooth"}); }
+function toggleDrawer() { document.getElementById("drawer").classList.toggle("open"); document.getElementById("overlay").classList.toggle("open"); }
+function closeDrawer() { document.getElementById("drawer").classList.remove("open"); document.getElementById("overlay").classList.remove("open"); }
+
+renderContent();
+</script>
+</body>
+</html>
