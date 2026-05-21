@@ -449,12 +449,12 @@ const content = {
       ["8-Uhr-Dienst Fr","08:00 – 15:00 Uhr","Gleiches Prinzip: darf gehen wenn nur noch ein Saal läuft + AWR leer, ODER nur noch AWR belegt ist"],
     ]},
     {t:"info", title:"Regelung 8-Uhr-Dienst", items:[
-      "Darf nach Hause wenn: nur noch 1 Saal läuft UND AWR leer ist – ODER kein Saal mehr läuft und nur noch AWR belegt ist (→ AWR fertig machen, dann gehen)",
-      "Gilt Mo–Do und Fr gleichermaßen – kein festes Dienstende solange noch Saal UND AWR gleichzeitig laufen",
+      "Macht das Programm und den AWR zu Ende – bleibt bis alles fertig ist",
+      "Rufdienst bleibt zusätzlich nur wenn mehr als der AWR läuft (also noch Säle aktiv sind)",
     ]},
     {t:"sec", text:"Rufbereitschaft"},
     {t:"cards", items:[
-      {icon:"📱", color:"#1D4ED8", title:"Erreichbarkeit", text:"Von zu Hause – ausschließlich erreichbar über Rufumleitung Tel. 335."},
+      {icon:"📱", color:"#1D4ED8", title:"Erreichbarkeit", text:"Von zu Hause – ausschließlich erreichbar über Rufumleitung Tel. 335. Rufdienst muss nur bleiben wenn noch mehr als der AWR läuft.."},
       {icon:"🌙", color:"#005A6E", title:"Wochentags", text:"Von Dienstende bis nächsten Morgen 7:00 Uhr (Einzeldienst)."},
       {icon:"📅", color:"#6D28D9", title:"Freitag bis Montag", text:"Freitag 14:00 Uhr bis Montag 7:00 Uhr durchgehend."},
     ]},
@@ -468,6 +468,16 @@ const content = {
       "Erst dann: Feierabend",
     ]},
     {t:"cave", text:"Der Kontrollanruf ist Pflicht – nicht optional! Er bestätigt gleichzeitig zwei Dinge: alle Patienten sind sicher verlegt, und der Rufdienst ist erreichbar. Wenn der Anruf nicht durchgeht: Rufumleitung prüfen und neu einrichten."},
+    
+    {t:"sec", text:"Verhalten im Krankheitsfall"},
+    {t:"list", items:[
+      "Morgens VOR Dienstbeginn melden – am besten direkt bei der Führungskraft",
+      "Alternativ: im Pausenraum OP (Tel. 311) – dort ist früh morgens immer jemand",
+      "Bis 11:00 Uhr im AWR (Tel. 335) oder bei TL Anästhesie (Tel. 381) melden",
+      "Mitteilen: wie lange voraussichtlich krank? Kommt man morgen wieder?",
+    ]},
+    {t:"highlight", title:"Warum ist das so wichtig?", text:"Die rechtzeitige Information ist entscheidend für die OP-Planung: Können alle Säle besetzt werden? Muss umgeplant oder umorganisiert werden? Je früher die Info, desto besser für alle."},
+    {t:"cave", text:"Nicht einfach fernbleiben ohne Meldung! Immer aktiv Bescheid geben – Führungskraft oder Pausenraum OP (Tel. 311) vor Dienstbeginn, dann bis 11:00 Uhr AWR (Tel. 335) oder TL (Tel. 381) mit Prognose."},
     {t:"sec", text:"Freie Zeiten & Urlaub"},
     {t:"list", items:[
       "Wochenenden: grundsätzlich frei",
@@ -477,9 +487,9 @@ const content = {
     {t:"sec", text:"Pausen"},
     {t:"info", title:"Pausenregelung", items:[
       "Säle: Jeder Saal regelt seine Pausen eigenständig",
-      "AWR darf NIEMALS unbesetzt sein! Pause nur wenn eine Vertretung den AWR für 30 Minuten vollständig übernimmt",
+      "AWR-Pause: Rücksprache mit AWR-Kollegen und Teamleitung (Tel. 381) – der AWR wird dann für 30 Minuten ausgelöst (Vertretung übernimmt)",
     ]},
-    {t:"cave", text:"Im AWR niemals alleine pausieren. Immer Rücksprache mit TL (Tel. 381) – Abdeckung muss sichergestellt sein."},
+    
   ],
 
   morgen: [
@@ -943,6 +953,12 @@ const content = {
       ["Uro Röntgen 1. OG","362",""],
       ["Ärztlicher Bereitschaftsdienst (Nacht / WE)","374","Nachts + Wochenende – nicht tagsüber!"],
       ["Technik","370 / 371",""],
+      ["Pausenraum OP","311","Morgens immer besetzt – Krankmeldung hier"],
+      ["Schleuse / Service-Assistent","316",""],
+      ["Steri","314",""],
+      ["Reinigung OP","319 / 339",""],
+      ["Rufdienst Anästhesist","0431 7206520","Extern – Rufdienst des Anästhesisten"],
+      ["Diensthandy OP-Kollegen","0172 7643604","Oder über Telefonliste"],
     ]},
   ],
 
