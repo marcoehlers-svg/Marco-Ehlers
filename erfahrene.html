@@ -406,6 +406,7 @@ const chapters = [
   { id:"awr",        icon:"🛌", title:"Aufwachraum",          sub:"Betreuung & Übergabe",           color:"#1D4ED8" },
   { id:"notfall",    icon:"🚨", title:"Notfall & Reanimation",sub:"Notfallbox & Defi",              color:"#C0392B" },
   { id:"telefon",    icon:"📞", title:"Telefonnummern",       sub:"Alle Durchwahlnummern",          color:"#374151" },
+  { id:"awrdienst",   icon:"🌅", title:"AWR-Dienst",        sub:"Morgens & Nachmittag",            color:"#0369A1" },
   { id:"checkliste", icon:"✅", title:"Einarbeitungs-Check",  sub:"Fortschritt dokumentieren",      color:"#15803D" },
 ];
 
@@ -485,7 +486,7 @@ const content = {
     {t:"sec", text:"Morgendliche Geräteüberprüfung (ab 07:00 Uhr)"},
     {t:"list", items:[
       "Narkosegerät: Lecktest und Einsatzfähigkeit prüfen",
-      "Absaugung: Funktion kontrollieren",
+      "Absaugung: Funktion kontrollieren – danach wieder ausschalten (nicht dauerhaft laufen lassen wegen Lärm)",
       "Narkoseabgasführung: wieder einstecken!",
       "Kühlschrank: Atropin und Atracurium holen, auf alle Einleitungen verteilen",
       "Bestimmung: wer welchen Saal / welche Einleitung macht",
@@ -573,6 +574,16 @@ const content = {
   ],
 
   narkose: [
+        {t:"sec", text:"5R-Regel – bei jeder Medikamentengabe"},
+    {t:"info", title:"5R-Regel – IMMER beachten!", items:[
+      "✅ Richtiges MEDIKAMENT",
+      "✅ Richtiger PATIENT",
+      "✅ Richtige DOSIERUNG",
+      "✅ Richtige APPLIKATION (i.v., oral, regional...)",
+      "✅ Richtige ZEIT",
+    ]},
+    {t:"highlight", title:"Hinweis zur 6R-Regel", text:"Die vollständige 6R-Regel enthält zusätzlich: richtiges DOKUMENT. In der Anästhesie entfällt dieser Punkt – die Dokumentation übernimmt der Anästhesist."},
+    {t:"cave", text:"Die 5R-Regel gilt für JEDE Medikamentengabe – egal ob Propofol, Opiat, Ephedrin oder Piritramid im AWR. Nie eine Spritze geben ohne vorher alle 5 Punkte gedanklich abgehakt zu haben!"},
     {t:"sec", text:"Standardzubehör – Narkosevorbereitung"},
     {t:"list", items:[
       "Infusion mit Dreiwegehahn",
@@ -935,6 +946,49 @@ const content = {
     ]},
   ],
 
+
+  awrdienst: [
+    {t:"sec", text:"Morgendliche Aufgaben"},
+    {t:"list", items:[
+      "PC hochfahren und einloggen",
+      "Monitore Dräger anschalten",
+      "Philips-Monitore aus dem AWR rausnehmen und in Einleitung 1 hängen",
+      "Checkliste Defi durchführen",
+      "Checkliste Kühlschrank durchführen",
+      "Checkliste Blutzucker (nur montags)",
+      "BtM-Bestand AWR kontrollieren",
+      "Spülraum: Fäkalienspüle durchlaufen lassen + beide Hähne 10 Sekunden heißes Wasser laufen lassen",
+      "Kissen und ggf. Spüllösung aus dem Keller holen → Kissen beziehen",
+    ]},
+    {t:"sec", text:"Nachmittägliche Aufgaben"},
+    {t:"list", items:[
+      "Betten putzen und neu beziehen",
+      "Nachttische neu bestücken: Patientenarmband, Markierstift, Spuckbeutel, Wasserflasche, Becher",
+      "Kaffee entsorgen, Wasserkanne auskippen, Becher auffüllen",
+      "Umkleideschränke auswischen und neu bestücken: OP-Hemd und Netzhose",
+      "Wasserflaschen und Becher neben dem Telefon auffüllen",
+      "O₂-Leitungen und Nasenstöpsel auffüllen, benutzte Leitungen entsorgen",
+      "Monitore und Infusionsständer reinigen",
+    ]},
+    {t:"highlight", title:"Wenn Maike nicht da ist", text:"Das Wichtigste zuerst: direkt um 7:00 Uhr die ambulanten Patienten aus dem Wartezimmer reinholen. Alles andere danach."},
+    {t:"sec", text:"Ambulante Patienten aufnehmen"},
+    {t:"table", headers:["Schritt","Was abfragen / tun"], rows:[
+      ["1","Nüchtern?"],
+      ["2","Abholung und Betreuung 24h organisiert?"],
+      ["3","Gehhilfen, orthopädischer Schuh oder Schiene? (wenn nicht ersichtlich fragen)"],
+      ["4","Clexane auf der Apotheke geholt?"],
+      ["5","Frühstück dabei?"],
+      ["6","Notfallkontakt geben lassen"],
+      ["7","Umkleide → alles einschließen → WC"],
+      ["8","Ins Bett"],
+      ["9","Rasur, Markierung, Schmuck entfernt?"],
+    ]},
+    {t:"cave", text:"Bei mehreren ambulanten Patienten: immer zuerst fragen, wer zuerst eingeschleust werden soll – nicht einfach selbst entscheiden!"},
+    {t:"info", title:"Kinder im AWR", items:[
+      "Ein Elternteil darf mit ans Bett",
+      "Vorzugsweise Fensterplatz für das Kind",
+    ]},
+  ],
   checkliste: [
     {t:"sec", text:"Einarbeitungs-Checkliste – Fortschritt dokumentieren"},
     {t:"cl_group", title:"1. Orientierung & Struktur", id:"g0", items:[
